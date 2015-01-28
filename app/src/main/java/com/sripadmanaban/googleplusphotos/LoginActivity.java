@@ -1,6 +1,7 @@
 package com.sripadmanaban.googleplusphotos;
 
 //Master Comment
+//Master Comment 2
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
