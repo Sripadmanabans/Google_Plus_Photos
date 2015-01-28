@@ -1,5 +1,6 @@
 package com.sripadmanaban.googleplusphotos;
-
+//This is a trivial comment
+//juib comment
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
