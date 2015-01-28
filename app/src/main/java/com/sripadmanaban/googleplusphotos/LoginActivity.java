@@ -126,7 +126,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 protected void onPostExecute(String token) {
                     Log.i(TAG, "Access token retrieved:" + token);
                     // got access token... start another activity with this as argument to fetch pics.
-                    Intent intent = new Intent();
+                    Intent intent = new Intent(LoginActivity.this, DisplayImagesActivity.class);
+                    intent.putExtra("ACCESS_TOKEN", token);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplicationContext().startActivity(intent);
                 }
 
             };
