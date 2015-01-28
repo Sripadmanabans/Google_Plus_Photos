@@ -1,30 +1,32 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:padding="20dip">
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="2dip">
+        android:orientation="vertical"
+        android:padding="2dip"
+        android:layout_centerInParent="true">
+
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dip"
             android:enabled="false" />
 
         <Button
             android:id="@+id/sign_out_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sign_out_button_name"
             android:enabled="false" />
 
         <Button
             android:id="@+id/revoke_access_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/revoke_access_button_name"
             android:enabled="false" />
@@ -35,20 +37,11 @@
         android:id="@+id/sign_in_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dip"
-        android:text="@string/status_signed_out" />
+        android:layout_marginTop="30dip"
+        android:text="@string/status_signed_out"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        />
 
-    <TextView
-        android:id="@+id/circles_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/circles_title" />
 
-    <ListView
-        android:id="@+id/circles_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="0dip" />
-
-</LinearLayout>
+</RelativeLayout>
