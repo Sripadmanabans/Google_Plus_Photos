@@ -1,5 +1,7 @@
 package com.sripadmanaban.googleplusphotos;
 
+//Master Comment
+
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
@@ -126,6 +128,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 protected void onPostExecute(String token) {
                     Log.i(TAG, "Access token retrieved:" + token);
                     // got access token... start another activity with this as argument to fetch pics.
+                    Intent intent = new Intent();
                 }
 
             };
