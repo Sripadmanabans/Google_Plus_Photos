@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,7 +31,8 @@ import java.util.List;
 public class DisplayImagesFragment extends Fragment {
 
     private String authorization;
-    private String actorId;
+
+    private ListJson listJson;
 
     private View view;
 
@@ -72,8 +74,6 @@ public class DisplayImagesFragment extends Fragment {
 
                 Response response = client.newCall(request).execute();
 
-                String id = "";
-
                 String inputSearch = response.body().string();
 
                 Gson gson = new GsonBuilder().create();
@@ -81,7 +81,7 @@ public class DisplayImagesFragment extends Fragment {
                 SearchJson searchJson = gson.fromJson(inputSearch, SearchJson.class);
 
                 Log.d("data", searchJson.getItems().get(0).getActor().getId());
-                id = searchJson.getItems().get(0).getActor().getId();
+                String id = searchJson.getItems().get(0).getActor().getId();
 
                 String listUrl = "https://www.googleapis.com/plus/v1/people/" + id + "/activities/public?key=AIzaSyBmE7DEY4PeKC_KaG7SqwPZdM9BexGiK_o";
 
@@ -97,7 +97,7 @@ public class DisplayImagesFragment extends Fragment {
 
                 String inputList = responseList.body().string();
 
-                ListJson listJson = gson.fromJson(inputList, ListJson.class);
+                listJson = gson.fromJson(inputList, ListJson.class);
                 Log.d("data", listJson.getItems().get(0).getObject().getAttachments().get(0).getFullImage().getUrl());
 
             } catch (IOException e) {
@@ -108,11 +108,9 @@ public class DisplayImagesFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<String> strings) {
-            /*TextView textView = (TextView) view.findViewById(R.id.list_view);
-            textView.setText(strings.get(0));
-            for(String value : strings) {
-                Log.d("UrlValue", value);
-            }*/
+            TextView textView = (TextView) view.findViewById(R.id.list_view);
+            textView.setText(listJson.getItems().get(0).getObject().getAttachments().get(0).getFullImage().getUrl());
+
         }
     }
 
