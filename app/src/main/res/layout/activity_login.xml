@@ -40,8 +40,15 @@
         android:layout_marginTop="30dip"
         android:text="@string/status_signed_out"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        />
+        android:layout_centerHorizontal="true"/>
 
+    <Button
+        android:id="@+id/check_photos_button"
+        android:enabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:text="@string/check_photo_button"/>
 
 </RelativeLayout>

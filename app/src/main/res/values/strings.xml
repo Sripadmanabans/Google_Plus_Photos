@@ -22,4 +22,6 @@
     <string name="close">Close</string>
     <string name="profile_picture">User\'s profile picture.</string>
 
+    <string name="check_photo_button">Check for photos!!</string>
+
 </resources>

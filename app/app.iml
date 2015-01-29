@@ -88,6 +88,7 @@
     <orderEntry type="library" exported="" name="google-api-services-plus-v1-rev207-1.19.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="javax.json-1.0" level="project" />
     <orderEntry type="library" exported="" name="google-api-client-1.19.1" level="project" />
     <orderEntry type="library" exported="" name="google-http-client-gson-1.19.0" level="project" />
   </component>

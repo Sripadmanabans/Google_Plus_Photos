@@ -78,7 +78,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private SignInButton mSignInButton;
     private Button mSignOutButton;
     private Button mRevokeButton;
+    private Button mCheckPhotoButton;
     private TextView mStatus;
+
+    private String accessToken;
 
     private GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
         /* onConnected is called when our Activity successfully connects to Google
@@ -96,6 +99,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             mSignInButton.setEnabled(false);
             mSignOutButton.setEnabled(true);
             mRevokeButton.setEnabled(true);
+            mCheckPhotoButton.setEnabled(true);
 
             // Retrieve some profile information to personalize our app for the user.
             Person currentUser = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
@@ -105,34 +109,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     currentUser.getDisplayName()));
 
 
-            AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
-                @Override
-                protected String doInBackground(Void... params) {
-
-                    String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
-                    String scope = "oauth2:" + Scopes.PLUS_LOGIN + " " + Scopes.PLUS_ME;
-
-                    String accessToken = "";
-                    try {
-                        accessToken = GoogleAuthUtil.getToken(getApplicationContext(), accountName, scope);
-                    } catch (IOException | GoogleAuthException e) {
-                        e.printStackTrace();
-                    }
-
-                    return accessToken;
-                }
-
-                @Override
-                protected void onPostExecute(String token) {
-                    Log.i(TAG, "Access token retrieved:" + token);
-                    // got access token... start another activity with this as argument to fetch pics.
-                    Intent intent = new Intent(LoginActivity.this, DisplayImagesActivity.class);
-                    intent.putExtra("ACCESS_TOKEN", token);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getApplicationContext().startActivity(intent);
-                }
-
-            };
+            AsyncAccessToken task = new AsyncAccessToken();
             task.execute();
 
             // Indicate that the sign in process is complete.
@@ -145,6 +122,32 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             // We call connect() to attempt to re-establish the connection or get a
             // ConnectionResult that we can attempt to resolve.
             mGoogleApiClient.connect();
+        }
+
+        class AsyncAccessToken extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected String doInBackground(Void... params) {
+
+                String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
+                String scope = "oauth2:" + Scopes.PLUS_LOGIN + " " + Scopes.PLUS_ME;
+
+                String accessToken = "";
+                try {
+                    accessToken = GoogleAuthUtil.getToken(getApplicationContext(), accountName, scope);
+                } catch (IOException | GoogleAuthException e) {
+                    e.printStackTrace();
+                }
+
+                return accessToken;
+            }
+
+            @Override
+            protected void onPostExecute(String token) {
+                Log.i(TAG, "Access token retrieved:" + token);
+                accessToken = token;
+            }
+
         }
     };
 
@@ -194,11 +197,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
         mSignOutButton = (Button) findViewById(R.id.sign_out_button);
         mRevokeButton = (Button) findViewById(R.id.revoke_access_button);
+        mCheckPhotoButton = (Button) findViewById(R.id.check_photos_button);
+
         mStatus = (TextView) findViewById(R.id.sign_in_status);
 
         mSignInButton.setOnClickListener(this);
         mSignOutButton.setOnClickListener(this);
         mRevokeButton.setOnClickListener(this);
+        mCheckPhotoButton.setOnClickListener(this);
 
         if (savedInstanceState != null) {
             mSignInProgress = savedInstanceState
@@ -270,6 +276,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     Plus.AccountApi.revokeAccessAndDisconnect(mGoogleApiClient);
                     mGoogleApiClient = buildGoogleApiClient();
                     mGoogleApiClient.connect();
+                    break;
+                case R.id.check_photos_button:
+                    Intent intent = new Intent(LoginActivity.this, DisplayImagesActivity.class);
+                    intent.putExtra("ACCESS_TOKEN", accessToken);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplicationContext().startActivity(intent);
                     break;
             }
         }
