@@ -25,9 +25,9 @@ public class DisplayImagesActivity extends Activity implements DisplayImagesFrag
     }
 
     @Override
-    public void dataForFullImageFragment(String fullImageUrl, String plusOneUrl) {
+    public void dataForFullImageFragment(int position) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, PlusOneImageFragment.newInstance(fullImageUrl, plusOneUrl), PlusOneImageFragment.class.getName());
+        transaction.replace(R.id.fragment_container, PlusOneImageFragment.newInstance(position), PlusOneImageFragment.class.getName());
         transaction.addToBackStack(PlusOneImageFragment.class.getName());
         transaction.commit();
     }

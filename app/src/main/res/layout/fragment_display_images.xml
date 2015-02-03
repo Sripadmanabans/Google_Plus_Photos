@@ -4,11 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/list_view"
-        android:text="Hello"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/activity_main_swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
 
     <GridView
         android:id="@+id/gridView"
@@ -20,5 +19,5 @@
         android:stretchMode="columnWidth"
         android:gravity="center"
         android:clickable="true"/>
-
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

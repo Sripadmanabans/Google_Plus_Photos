@@ -53,12 +53,12 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        Picasso.with(context).setIndicatorsEnabled(true);
-        Picasso.with(context).load(imageUrl.get(position))
-                .resize(350, 350)
-                .centerCrop()
-                .into(imageView);
+     Picasso.with(context).setIndicatorsEnabled(true);
+  Picasso.with(context).load(imageUrl.get(position))
+        .resize(350, 350)
+        .centerCrop()
+        .into(imageView);
 
         return imageView;
-    }
-}
+        }
+        }
