@@ -17,6 +17,7 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,18 +34,6 @@ import java.io.IOException;
  * users profile information.
  */
 public class LoginActivity extends Activity implements View.OnClickListener {
-
-    private static final String TAG = "android-plus-quickstart";
-
-    private static final int STATE_DEFAULT = 0;
-    private static final int STATE_SIGN_IN = 1;
-    private static final int STATE_IN_PROGRESS = 2;
-
-    private static final int RC_SIGN_IN = 0;
-
-    private static final int DIALOG_PLAY_SERVICES_ERROR = 0;
-
-    private static final String SAVED_PROGRESS = "sign_in_progress";
 
     // GoogleApiClient wraps our service connection to Google Play services and
     // provides access to the users sign in state and Google's APIs.
@@ -81,7 +70,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private Button mCheckPhotoButton;
     private TextView mStatus;
 
-    private String accessToken;
+    private SharedPreferences preferences;
 
     private GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
         /* onConnected is called when our Activity successfully connects to Google
@@ -93,7 +82,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         @Override
         public void onConnected(Bundle connectionHint) {
             // Reaching onConnected means we consider the user signed in.
-            Log.i(TAG, "onConnected");
+            Log.i(Constants.TAG, "onConnected");
 
             // Update the user interface to reflect that the user is signed in.
             mSignInButton.setEnabled(false);
@@ -113,7 +102,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             task.execute();
 
             // Indicate that the sign in process is complete.
-            mSignInProgress = STATE_DEFAULT;
+            mSignInProgress = Constants.STATE_DEFAULT;
         }
 
         @Override
@@ -144,8 +133,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
             @Override
             protected void onPostExecute(String token) {
-                Log.i(TAG, "Access token retrieved:" + token);
-                accessToken = token;
+                Log.i(Constants.TAG, "Access token retrieved:" + token);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString(Constants.ACCESS_TOKEN, token);
+                editor.apply();
             }
 
         }
@@ -160,7 +151,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         public void onConnectionFailed(ConnectionResult result) {
             // Refer to the javadoc for ConnectionResult to see what error codes might
             // be returned in onConnectionFailed.
-            Log.i(TAG, "onConnectionFailed: ConnectionResult.getErrorCode() = "
+            Log.i(Constants.TAG, "onConnectionFailed: ConnectionResult.getErrorCode() = "
                     + result.getErrorCode());
 
             if (result.getErrorCode() == ConnectionResult.API_UNAVAILABLE) {
@@ -168,14 +159,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 // configuration might not be supported with the requested API or a required component
                 // may not be installed, such as the Android Wear application. You may need to use a
                 // second GoogleApiClient to manage the application's optional APIs.
-                Log.d(TAG, "Hello");
-            } else if (mSignInProgress != STATE_IN_PROGRESS) {
+                Log.d(Constants.TAG, "Hello");
+            } else if (mSignInProgress != Constants.STATE_IN_PROGRESS) {
                 // We do not have an intent in progress so we should store the latest
                 // error resolution intent for use when the sign in button is clicked.
                 mSignInIntent = result.getResolution();
                 mSignInError = result.getErrorCode();
 
-                if (mSignInProgress == STATE_SIGN_IN) {
+                if (mSignInProgress == Constants.STATE_SIGN_IN) {
                     // STATE_SIGN_IN indicates the user already clicked the sign in button
                     // so we should continue processing errors until the user is signed in
                     // or they click cancel.
@@ -194,6 +185,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        preferences = getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
+
         mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
         mSignOutButton = (Button) findViewById(R.id.sign_out_button);
         mRevokeButton = (Button) findViewById(R.id.revoke_access_button);
@@ -208,7 +201,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
         if (savedInstanceState != null) {
             mSignInProgress = savedInstanceState
-                    .getInt(SAVED_PROGRESS, STATE_DEFAULT);
+                    .getInt(Constants.SAVED_PROGRESS, Constants.STATE_DEFAULT);
         }
 
         mGoogleApiClient = buildGoogleApiClient();
@@ -244,7 +237,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(SAVED_PROGRESS, mSignInProgress);
+        outState.putInt(Constants.SAVED_PROGRESS, mSignInProgress);
     }
 
     @Override
@@ -279,7 +272,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     break;
                 case R.id.check_photos_button:
                     Intent intent = new Intent(LoginActivity.this, DisplayImagesActivity.class);
-                    intent.putExtra("ACCESS_TOKEN", accessToken);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getApplicationContext().startActivity(intent);
                     break;
@@ -305,15 +297,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 // OnConnectionFailed callback.  This will allow the user to
                 // resolve the error currently preventing our connection to
                 // Google Play services.
-                mSignInProgress = STATE_IN_PROGRESS;
+                mSignInProgress = Constants.STATE_IN_PROGRESS;
                 startIntentSenderForResult(mSignInIntent.getIntentSender(),
-                        RC_SIGN_IN, null, 0, 0, 0);
+                        Constants.RC_SIGN_IN, null, 0, 0, 0);
             } catch (SendIntentException e) {
-                Log.i(TAG, "Sign in intent could not be sent: "
+                Log.i(Constants.TAG, "Sign in intent could not be sent: "
                         + e.getLocalizedMessage());
                 // The intent was canceled before it was sent.  Attempt to connect to
                 // get an updated ConnectionResult.
-                mSignInProgress = STATE_SIGN_IN;
+                mSignInProgress = Constants.STATE_SIGN_IN;
                 mGoogleApiClient.connect();
             }
         } else {
@@ -321,7 +313,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             // error types, so we show the default Google Play services error
             // dialog which may still start an intent on our behalf if the
             // user can resolve the issue.
-            showDialog(DIALOG_PLAY_SERVICES_ERROR);
+            showDialog(Constants.DIALOG_PLAY_SERVICES_ERROR);
         }
     }
 
@@ -329,15 +321,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
         switch (requestCode) {
-            case RC_SIGN_IN:
+            case Constants.RC_SIGN_IN:
                 if (resultCode == RESULT_OK) {
                     // If the error resolution was successful we should continue
                     // processing errors.
-                    mSignInProgress = STATE_SIGN_IN;
+                    mSignInProgress = Constants.STATE_SIGN_IN;
                 } else {
                     // If the error resolution was not successful or the user canceled,
                     // we should stop processing errors.
-                    mSignInProgress = STATE_DEFAULT;
+                    mSignInProgress = Constants.STATE_DEFAULT;
                 }
 
                 if (!mGoogleApiClient.isConnecting()) {
@@ -362,17 +354,17 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     @Override
     protected Dialog onCreateDialog(int id) {
         switch(id) {
-            case DIALOG_PLAY_SERVICES_ERROR:
+            case Constants.DIALOG_PLAY_SERVICES_ERROR:
                 if (GooglePlayServicesUtil.isUserRecoverableError(mSignInError)) {
                     return GooglePlayServicesUtil.getErrorDialog(
                             mSignInError,
                             this,
-                            RC_SIGN_IN,
+                            Constants.RC_SIGN_IN,
                             new DialogInterface.OnCancelListener() {
                                 @Override
                                 public void onCancel(DialogInterface dialog) {
-                                    Log.e(TAG, "Google Play services resolution cancelled");
-                                    mSignInProgress = STATE_DEFAULT;
+                                    Log.e(Constants.TAG, "Google Play services resolution cancelled");
+                                    mSignInProgress = Constants.STATE_DEFAULT;
                                     mStatus.setText(R.string.status_signed_out);
                                 }
                             });
@@ -383,9 +375,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Log.e(TAG, "Google Play services error could not be "
+                                            Log.e(Constants.TAG, "Google Play services error could not be "
                                                     + "resolved: " + mSignInError);
-                                            mSignInProgress = STATE_DEFAULT;
+                                            mSignInProgress = Constants.STATE_DEFAULT;
                                             mStatus.setText(R.string.status_signed_out);
                                         }
                                     }).create();
