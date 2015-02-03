@@ -5,25 +5,30 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 
+import java.util.HashMap;
+
 /**
  * Display Activity
  * Created by Sripadmanaban on 1/28/2015.
  */
-public class DisplayImagesActivity extends Activity {
+public class DisplayImagesActivity extends Activity implements DisplayImagesFragment.DisplayImagesFragmentCallBack {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_images);
 
-        Intent intent = getIntent();
-        Bundle bundle = new Bundle();
-        bundle.putString("ACCESS_TOKEN", intent.getStringExtra("ACCESS_TOKEN"));
-
-        DisplayImagesFragment fragment = new DisplayImagesFragment();
-        fragment.setArguments(bundle);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.fragment_container, fragment, DisplayImagesFragment.class.getName());
+        transaction.replace(R.id.fragment_container, DisplayImagesFragment.newInstance(this), DisplayImagesFragment.class.getName());
+        transaction.commit();
+    }
+
+    @Override
+    public void dataForFullImageFragment(String fullImageUrl, String plusOneUrl) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, PlusOneImageFragment.newInstance(fullImageUrl, plusOneUrl), PlusOneImageFragment.class.getName());
+        transaction.addToBackStack(PlusOneImageFragment.class.getName());
         transaction.commit();
     }
 }

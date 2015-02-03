@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName;
  */
 public class AttachmentsList {
 
+    @SerializedName("url")
+    private String url;
+
     @SerializedName("fullImage")
     private FullImageList fullImage;
 
@@ -16,5 +19,13 @@ public class AttachmentsList {
 
     public void setFullImage(FullImageList fullImage) {
         this.fullImage = fullImage;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
