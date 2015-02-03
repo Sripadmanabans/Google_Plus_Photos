@@ -254,6 +254,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     // We clear the default account on sign out so that Google Play
                     // services will not return an onConnected callback without user
                     // interaction.
+                    mCheckPhotoButton.setEnabled(false);
                     Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
                     mGoogleApiClient.disconnect();
                     mGoogleApiClient.connect();

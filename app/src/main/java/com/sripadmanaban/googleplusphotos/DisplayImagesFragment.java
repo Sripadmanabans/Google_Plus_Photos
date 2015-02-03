@@ -6,9 +6,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -42,9 +46,13 @@ public class DisplayImagesFragment extends Fragment {
 
     private GridView gridView;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     private HashMap<String, String> imageMap = new HashMap<>();
 
     DisplayImagesFragmentCallBack mCallBack;
+
+    private ImageCenter imageCenter;
 
     public static DisplayImagesFragment newInstance(Context context) {
         DisplayImagesFragment displayImagesFragment = new DisplayImagesFragment();
@@ -67,6 +75,8 @@ public class DisplayImagesFragment extends Fragment {
 
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,6 +86,10 @@ public class DisplayImagesFragment extends Fragment {
         authorization = "Bearer " + bundle.getString(Constants.ACCESS_TOKEN);
 
         Log.d("auth", authorization);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.activity_main_swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
+
 
         gridView = (GridView) view.findViewById(R.id.gridView);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -89,8 +103,33 @@ public class DisplayImagesFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 5000);
+            }
+        });
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+
+        initiateRefresh();
+
+    }
+
+    private void initiateRefresh() {
+
+        /**
+         * Execute the background task, which uses {@link android.os.AsyncTask} to load the data.
+         */
         AsyncSearchActivities searchActivities = new AsyncSearchActivities();
         searchActivities.execute(authorization);
 
@@ -100,7 +139,10 @@ public class DisplayImagesFragment extends Fragment {
         catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+
     }
+
+
 
     private class AsyncSearchActivities extends AsyncTask<String, Void, HashMap<String, String>> {
 
@@ -108,7 +150,7 @@ public class DisplayImagesFragment extends Fragment {
 
         private HashMap<String, String> imageUrl = new HashMap<>();
 
-        private ImageCenter imageCenter;
+
 
         @Override
         protected void onPreExecute() {
@@ -165,21 +207,32 @@ public class DisplayImagesFragment extends Fragment {
         @Override
         protected void onPostExecute(HashMap<String, String> map) {
 
-            Log.d("count map", map.size() + "");
-            imageCenter.setImageUrl(map);
-            ImageAdapter imageAdapter = new ImageAdapter(getActivity(), imageCenter.getImageUrl());
-            Log.d("count", imageAdapter.getCount() + "");
-            gridView.setAdapter(imageAdapter);
-
+            onRefreshComplete(map);
         }
     }
 
+
+    private void onRefreshComplete(HashMap<String,String> map) {
+
+      // Remove all items from the HashMap, and then replace them with the new items
+        Log.d("count map", map.size() + "");
+        imageCenter.setImageUrl(map);
+
+        ImageAdapter imageAdapter = new ImageAdapter(getActivity(), imageCenter.getImageUrl());
+        Log.d("count", imageAdapter.getCount() + "");
+        gridView.setAdapter(imageAdapter);
+
+        // Stop the refreshing indicator
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+
+
     private void sendToCallingActivity(int position) {
-        ImageCenter imageCenter = ImageCenter.getImageCenter(getActivity().getApplicationContext());
+
         if(mCallBack != null) {
-            List<String> keys = new ArrayList<>(imageCenter.getImageUrl().keySet());
-            String key = keys.get(position);
-            mCallBack.dataForFullImageFragment(key, imageCenter.getImageUrl().get(key));
+
+            mCallBack.dataForFullImageFragment(position);
         }
     }
 
@@ -189,6 +242,6 @@ public class DisplayImagesFragment extends Fragment {
     }
 
     public interface DisplayImagesFragmentCallBack {
-        public void dataForFullImageFragment(String fullImageUrl, String plusOneUrl);
+        public void dataForFullImageFragment(int position);
     }
 }

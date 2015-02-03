@@ -30,6 +30,19 @@ public class ImageCenter {
     }
 
     public void setImageUrl(HashMap<String, String> imageUrl) {
-        this.imageUrl = imageUrl;
+
+        HashMap<String,String> newImageUrl = imageUrl;
+
+       for(String urlKeys: newImageUrl.keySet()){
+           if(this.imageUrl.containsKey(urlKeys)){
+               //skip
+               continue;
+           }else{
+               this.imageUrl.put(urlKeys, newImageUrl.get(urlKeys));
+           }
+
+       }
     }
+
+
 }
