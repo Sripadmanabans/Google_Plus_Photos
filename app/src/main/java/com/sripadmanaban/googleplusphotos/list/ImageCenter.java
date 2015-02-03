@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.HashMap;
 
 /**
+ * Center to store all image urls
  * Created by Sripadmanaban on 2/3/2015.
  */
 public class ImageCenter {
@@ -31,14 +32,9 @@ public class ImageCenter {
 
     public void setImageUrl(HashMap<String, String> imageUrl) {
 
-        HashMap<String,String> newImageUrl = imageUrl;
-
-       for(String urlKeys: newImageUrl.keySet()){
-           if(this.imageUrl.containsKey(urlKeys)){
-               //skip
-               continue;
-           }else{
-               this.imageUrl.put(urlKeys, newImageUrl.get(urlKeys));
+        for(String urlKeys: imageUrl.keySet()){
+           if(!this.imageUrl.containsKey(urlKeys)){
+               this.imageUrl.put(urlKeys, imageUrl.get(urlKeys));
            }
 
        }

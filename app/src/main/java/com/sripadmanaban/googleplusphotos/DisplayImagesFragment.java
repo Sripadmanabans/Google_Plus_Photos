@@ -11,8 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -33,8 +31,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 
 /**
  * Display Fragment
@@ -47,8 +43,6 @@ public class DisplayImagesFragment extends Fragment {
     private GridView gridView;
 
     private SwipeRefreshLayout swipeRefreshLayout;
-
-    private HashMap<String, String> imageMap = new HashMap<>();
 
     DisplayImagesFragmentCallBack mCallBack;
 
@@ -75,8 +69,6 @@ public class DisplayImagesFragment extends Fragment {
 
     }
 
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,7 +81,6 @@ public class DisplayImagesFragment extends Fragment {
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.activity_main_swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
-
 
         gridView = (GridView) view.findViewById(R.id.gridView);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -120,26 +111,15 @@ public class DisplayImagesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         initiateRefresh();
-
     }
 
     private void initiateRefresh() {
-
         /**
          * Execute the background task, which uses {@link android.os.AsyncTask} to load the data.
          */
         AsyncSearchActivities searchActivities = new AsyncSearchActivities();
         searchActivities.execute(authorization);
-
-        try {
-            imageMap = searchActivities.get();
-        }
-        catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-
     }
 
 
@@ -149,8 +129,6 @@ public class DisplayImagesFragment extends Fragment {
         private String searchUrl = "https://www.googleapis.com/plus/v1/activities?query=photographs&maxResults=20&key=AIzaSyBmE7DEY4PeKC_KaG7SqwPZdM9BexGiK_o";
 
         private HashMap<String, String> imageUrl = new HashMap<>();
-
-
 
         @Override
         protected void onPreExecute() {
@@ -206,7 +184,6 @@ public class DisplayImagesFragment extends Fragment {
 
         @Override
         protected void onPostExecute(HashMap<String, String> map) {
-
             onRefreshComplete(map);
         }
     }
@@ -214,7 +191,7 @@ public class DisplayImagesFragment extends Fragment {
 
     private void onRefreshComplete(HashMap<String,String> map) {
 
-      // Remove all items from the HashMap, and then replace them with the new items
+        // Remove all items from the HashMap, and then replace them with the new items
         Log.d("count map", map.size() + "");
         imageCenter.setImageUrl(map);
 
@@ -231,7 +208,6 @@ public class DisplayImagesFragment extends Fragment {
     private void sendToCallingActivity(int position) {
 
         if(mCallBack != null) {
-
             mCallBack.dataForFullImageFragment(position);
         }
     }

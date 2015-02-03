@@ -1,7 +1,6 @@
 package com.sripadmanaban.googleplusphotos;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
@@ -20,10 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The plus one fragments class
  * Created by Sripadmanaban on 2/2/2015.
  */
 public class PlusOneImageFragment extends Fragment implements
-        GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+        GestureDetector.OnGestureListener {
 
     private String plusOneUrl;
     private PlusOneButton mPlusOneButton;
@@ -34,7 +34,7 @@ public class PlusOneImageFragment extends Fragment implements
     public static PlusOneImageFragment newInstance(int position) {
         PlusOneImageFragment plusOneImageFragment = new PlusOneImageFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(Constants.IMAGE_POSITION,position);
+        bundle.putInt(Constants.IMAGE_POSITION, position);
         plusOneImageFragment.setArguments(bundle);
         return plusOneImageFragment;
     }
@@ -49,47 +49,26 @@ public class PlusOneImageFragment extends Fragment implements
         Bundle bundle = getArguments();
 
         int position = bundle.getInt(Constants.IMAGE_POSITION);
-        List<String> keys =new ArrayList<String>( imageCenter.getImageUrl().keySet());
+        List<String> keys = new ArrayList<>( imageCenter.getImageUrl().keySet());
 
-        String key = keys.get(position);
-
-
-
-        plusOneUrl = imageCenter.getImageUrl().get(key);
+        String imageUrl = keys.get(position);
+        plusOneUrl = imageCenter.getImageUrl().get(imageUrl);
 
         mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
         ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
 
         Picasso.with(getActivity())
-                .load(key)
+                .load(imageUrl)
                 .fit()
                 .into(imageView);
 
         return view;
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
         mPlusOneButton.initialize(plusOneUrl, Constants.PLUS_ONE_REQUEST_CODE);
-    }
-
-
-
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public boolean onDoubleTap(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public boolean onDoubleTapEvent(MotionEvent e) {
-        return false;
     }
 
     @Override
