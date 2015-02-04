@@ -74,13 +74,16 @@ public class DisplayImagesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_display_images, container, false);
+
+        imageCenter = ImageCenter.getImageCenter(getActivity().getApplicationContext());
+
         Bundle bundle = getArguments();
         authorization = "Bearer " + bundle.getString(Constants.ACCESS_TOKEN);
 
         Log.d("auth", authorization);
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.activity_main_swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
+        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue, R.color.red);
 
         gridView = (GridView) view.findViewById(R.id.gridView);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -133,7 +136,6 @@ public class DisplayImagesFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            imageCenter = ImageCenter.getImageCenter(getActivity().getApplicationContext());
         }
 
         @Override
@@ -208,7 +210,8 @@ public class DisplayImagesFragment extends Fragment {
     private void sendToCallingActivity(int position) {
 
         if(mCallBack != null) {
-            mCallBack.dataForFullImageFragment(position);
+            imageCenter.setPosition(position);
+            mCallBack.dataForFullImageFragment();
         }
     }
 
@@ -218,6 +221,6 @@ public class DisplayImagesFragment extends Fragment {
     }
 
     public interface DisplayImagesFragmentCallBack {
-        public void dataForFullImageFragment(int position);
+        public void dataForFullImageFragment();
     }
 }

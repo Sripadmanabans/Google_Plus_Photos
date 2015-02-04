@@ -2,10 +2,7 @@ package com.sripadmanaban.googleplusphotos;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
-
-import java.util.HashMap;
 
 /**
  * Display Activity
@@ -19,15 +16,17 @@ public class DisplayImagesActivity extends Activity implements DisplayImagesFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_images);
 
+
+
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, DisplayImagesFragment.newInstance(this), DisplayImagesFragment.class.getName());
         transaction.commit();
     }
 
     @Override
-    public void dataForFullImageFragment(int position) {
+    public void dataForFullImageFragment() {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, PlusOneImageFragment.newInstance(position), PlusOneImageFragment.class.getName());
+        transaction.replace(R.id.fragment_container, PlusOneImageFragment.newInstance(), PlusOneImageFragment.class.getName());
         transaction.addToBackStack(PlusOneImageFragment.class.getName());
         transaction.commit();
     }

@@ -12,6 +12,7 @@ public class ImageCenter {
 
     private HashMap<String, String> imageUrl;
     private static ImageCenter imageCenter;
+    private int position;
     private Context context;
 
     public static ImageCenter getImageCenter(Context context) {
@@ -36,9 +37,14 @@ public class ImageCenter {
            if(!this.imageUrl.containsKey(urlKeys)){
                this.imageUrl.put(urlKeys, imageUrl.get(urlKeys));
            }
-
        }
     }
 
+    public int getPosition() {
+        return position;
+    }
 
+    public void setPosition(int position) {
+        this.position = position;
+    }
 }
