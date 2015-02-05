@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -102,11 +101,9 @@ public class DisplayImagesFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 5000);
+                AsyncSearchActivities searchActivities = new AsyncSearchActivities();
+                searchActivities.execute(authorization);
+                swipeRefreshLayout.setRefreshing(true);
             }
         });
     }

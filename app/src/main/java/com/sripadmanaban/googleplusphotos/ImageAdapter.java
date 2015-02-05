@@ -12,9 +12,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
+ * Adapter for the grid view
  * Created by Sripadmanaban on 2/2/2015.
  */
 public class ImageAdapter extends BaseAdapter {
@@ -25,7 +25,7 @@ public class ImageAdapter extends BaseAdapter {
     public ImageAdapter(Context context, HashMap<String, String> map) {
         Log.d("map", map.toString());
         this.context = context;
-        imageUrl = new ArrayList(map.keySet());
+        imageUrl = new ArrayList<>(map.keySet());
     }
 
     @Override
