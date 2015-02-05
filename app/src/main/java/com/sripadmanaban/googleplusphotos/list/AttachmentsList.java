@@ -3,6 +3,7 @@ package com.sripadmanaban.googleplusphotos.list;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * Contains the images url and the plusone's url
  * Created by Sripadmanaban on 1/29/2015.
  */
 public class AttachmentsList {

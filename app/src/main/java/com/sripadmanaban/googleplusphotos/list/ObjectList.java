@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Object inside the items json object
  * Created by Sripadmanaban on 1/29/2015.
  */
 public class ObjectList {
