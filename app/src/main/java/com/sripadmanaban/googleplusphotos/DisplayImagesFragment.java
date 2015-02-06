@@ -28,7 +28,6 @@ import com.sripadmanaban.googleplusphotos.list.ListJson;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -208,8 +207,7 @@ public class DisplayImagesFragment extends Fragment {
     private void sendToCallingActivity(int position) {
 
         if(mCallBack != null) {
-            imageCenter.setPosition(position);
-            mCallBack.dataForFullImageFragment();
+            mCallBack.dataForFullImageFragment(position);
         }
     }
 
@@ -219,6 +217,6 @@ public class DisplayImagesFragment extends Fragment {
     }
 
     public interface DisplayImagesFragmentCallBack {
-        public void dataForFullImageFragment();
+        public void dataForFullImageFragment(int position);
     }
 }

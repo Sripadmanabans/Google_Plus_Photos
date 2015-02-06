@@ -13,7 +13,6 @@ public class ImageCenter {
 
     private LinkedHashMap<String, String> imageUrl;
     private static ImageCenter imageCenter;
-    private int position;
     private Context context;
 
     public static ImageCenter getImageCenter(Context context) {
@@ -39,14 +38,6 @@ public class ImageCenter {
                this.imageUrl.put(urlKeys, imageUrl.get(urlKeys));
            }
        }
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
     }
 
     public int getCount() {

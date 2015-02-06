@@ -3,7 +3,6 @@ package com.sripadmanaban.googleplusphotos;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 
 /**
  * Display Activity
@@ -25,9 +24,9 @@ public class DisplayImagesActivity extends Activity implements DisplayImagesFrag
     }
 
     @Override
-    public void dataForFullImageFragment() {
+    public void dataForFullImageFragment(int position) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, ViewPagerFragment.getInstance(), PlusOneImageFragment.class.getName());
+        transaction.replace(R.id.fragment_container, ViewPagerFragment.getInstance(position), PlusOneImageFragment.class.getName());
         transaction.addToBackStack(PlusOneImageFragment.class.getName());
         transaction.commit();
     }
