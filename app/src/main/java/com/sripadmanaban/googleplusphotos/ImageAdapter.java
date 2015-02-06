@@ -60,5 +60,5 @@ public class ImageAdapter extends BaseAdapter {
         .into(imageView);
 
         return imageView;
-        }
-        }
+    }
+}

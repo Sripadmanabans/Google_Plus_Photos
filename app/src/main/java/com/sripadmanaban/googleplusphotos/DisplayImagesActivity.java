@@ -16,8 +16,6 @@ public class DisplayImagesActivity extends Activity implements DisplayImagesFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_images);
 
-
-
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, DisplayImagesFragment.newInstance(this), DisplayImagesFragment.class.getName());
         transaction.commit();
@@ -26,7 +24,7 @@ public class DisplayImagesActivity extends Activity implements DisplayImagesFrag
     @Override
     public void dataForFullImageFragment(int position) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, ViewPagerFragment.getInstance(position), PlusOneImageFragment.class.getName());
+        transaction.replace(R.id.fragment_container, ViewPagerFragment.getInstance(position), ViewPagerFragment.class.getName());
         transaction.addToBackStack(PlusOneImageFragment.class.getName());
         transaction.commit();
     }
