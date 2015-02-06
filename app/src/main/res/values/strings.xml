@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Google+ SDK Sample</string>
+    <string name="app_name">Google+ Photos</string>
     <string name="circles_title">Visible circles:</string>
     <string name="sign_out_button_name">Sign out</string>
     <string name="revoke_access_button_name">Revoke</string>

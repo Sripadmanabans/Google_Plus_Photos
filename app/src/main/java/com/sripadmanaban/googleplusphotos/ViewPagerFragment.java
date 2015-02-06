@@ -18,6 +18,10 @@ import com.sripadmanaban.googleplusphotos.list.ImageCenter;
  */
 public class ViewPagerFragment extends Fragment {
 
+    private ImageCenter imageCenter;
+
+    private ScreenSlideAdapter adapter;
+
     public static Fragment getInstance(int position) {
         Fragment fragment = new ViewPagerFragment();
         Bundle bundle = new Bundle();
@@ -26,19 +30,20 @@ public class ViewPagerFragment extends Fragment {
         return fragment;
     }
 
-    private ImageCenter imageCenter;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
+        adapter = new ScreenSlideAdapter(getFragmentManager());
         Bundle bundle = getArguments();
         int currentPosition = bundle.getInt(Constants.IMAGE_POSITION, 0);
 
         imageCenter = ImageCenter.getImageCenter(getActivity().getApplicationContext());
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        viewPager.setAdapter(new ScreenSlideAdapter(getFragmentManager()));
+        viewPager.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
         viewPager.setCurrentItem(currentPosition);
         viewPager.setPageTransformer(true , new ZoomOutPageTransformer());
 
