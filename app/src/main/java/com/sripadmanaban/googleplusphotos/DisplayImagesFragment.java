@@ -29,6 +29,7 @@ import com.sripadmanaban.googleplusphotos.list.ListJson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -124,11 +125,11 @@ public class DisplayImagesFragment extends Fragment {
 
 
 
-    private class AsyncSearchActivities extends AsyncTask<String, Void, HashMap<String, String>> {
+    private class AsyncSearchActivities extends AsyncTask<String, Void, LinkedHashMap<String, String>> {
 
         private String searchUrl = "https://www.googleapis.com/plus/v1/activities?query=photographs&maxResults=20&key=AIzaSyBmE7DEY4PeKC_KaG7SqwPZdM9BexGiK_o";
 
-        private HashMap<String, String> imageUrl = new HashMap<>();
+        private LinkedHashMap<String, String> imageUrl = new LinkedHashMap<>();
 
         @Override
         protected void onPreExecute() {
@@ -136,7 +137,7 @@ public class DisplayImagesFragment extends Fragment {
         }
 
         @Override
-        protected HashMap<String, String> doInBackground(String... params) {
+        protected LinkedHashMap<String, String> doInBackground(String... params) {
 
             try {
 
@@ -182,13 +183,13 @@ public class DisplayImagesFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(HashMap<String, String> map) {
+        protected void onPostExecute(LinkedHashMap<String, String> map) {
             onRefreshComplete(map);
         }
     }
 
 
-    private void onRefreshComplete(HashMap<String,String> map) {
+    private void onRefreshComplete(LinkedHashMap<String,String> map) {
 
         // Remove all items from the HashMap, and then replace them with the new items
         Log.d("count map", map.size() + "");

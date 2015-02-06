@@ -2,7 +2,8 @@ package com.sripadmanaban.googleplusphotos.list;
 
 import android.content.Context;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 
 /**
  * Center to store all image urls
@@ -10,7 +11,7 @@ import java.util.HashMap;
  */
 public class ImageCenter {
 
-    private HashMap<String, String> imageUrl;
+    private LinkedHashMap<String, String> imageUrl;
     private static ImageCenter imageCenter;
     private int position;
     private Context context;
@@ -23,15 +24,15 @@ public class ImageCenter {
     }
 
     private ImageCenter(Context context) {
-        imageUrl = new HashMap<>();
+        imageUrl = new LinkedHashMap<>();
         this.context = context;
     }
 
-    public HashMap<String, String> getImageUrl() {
+    public LinkedHashMap<String, String> getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(HashMap<String, String> imageUrl) {
+    public void setImageUrl(LinkedHashMap<String, String> imageUrl) {
 
         for(String urlKeys: imageUrl.keySet()){
            if(!this.imageUrl.containsKey(urlKeys)){
