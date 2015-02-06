@@ -4,6 +4,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 /**
+ * This is used to create the transformation effect on the viewPager
  * Created by Sripadmanaban on 2/6/2015.
  */
 public class ZoomOutPageTransformer implements ViewPager.PageTransformer {

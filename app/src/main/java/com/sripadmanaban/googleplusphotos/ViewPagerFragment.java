@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.sripadmanaban.googleplusphotos.list.ImageCenter;
 
 /**
+ * View Pager is located here
  * Created by Sripadmanaban on 2/6/2015.
  */
 public class ViewPagerFragment extends Fragment {

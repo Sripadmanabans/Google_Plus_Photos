@@ -3,11 +3,7 @@ package com.sripadmanaban.googleplusphotos;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.GestureDetectorCompat;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -48,60 +44,6 @@ public class PlusOneImageFragment extends Fragment {
 
         imageCenter = ImageCenter.getImageCenter(getActivity().getApplicationContext());
         position = bundle.getInt(Constants.IMAGE_POSITION);
-
-        /*final GestureDetectorCompat mDetector = new GestureDetectorCompat(getActivity(), new GestureDetector.SimpleOnGestureListener() {
-            private static final String TAG = "Gesture";
-
-            @Override
-            public boolean onDown(MotionEvent e) {
-                Log.d(TAG, "Down");
-                return true;
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                Log.d(TAG, "on fling");
-                boolean result = false;
-                try {
-                    float diffX = e2.getX() - e1.getX();
-                    if(Math.abs(diffX) > 100 && Math.abs(velocityX) > 100) {
-                        if(diffX > 0) {
-                            //Going back
-                            if(position > 0) {
-                                position--;
-                            }
-                            else {
-                                position = imageCenter.getImageUrl().size() - 1;
-                            }
-                        }
-                        else {
-                            //Going forward
-                            if(position < imageCenter.getImageUrl().size() - 1) {
-                                position++;
-                            }
-                            else {
-                                position = 0;
-                            }
-                        }
-                        loadImage(position);
-                    }
-                    result = true;
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return result;
-            }
-        });
-
-        view.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return mDetector.onTouchEvent(event);
-            }
-
-        });*/
 
         mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
         imageView = (ImageView) view.findViewById(R.id.imageView);
