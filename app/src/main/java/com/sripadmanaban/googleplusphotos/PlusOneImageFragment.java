@@ -59,6 +59,7 @@ public class PlusOneImageFragment extends Fragment {
         plusOneUrl = imageCenter.getImagePlusOneURLs().get(position).getPlusOneUrl();
         Picasso.with(getActivity())
                 .load(imageUrl)
+                .placeholder(R.drawable.placeholder)
                 .resize(500, 500)
                 .centerCrop()
                 .into(imageView);

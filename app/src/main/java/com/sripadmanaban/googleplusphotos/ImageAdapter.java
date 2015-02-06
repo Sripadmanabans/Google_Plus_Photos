@@ -52,7 +52,8 @@ public class ImageAdapter extends BaseAdapter {
 
     Picasso.with(context).setIndicatorsEnabled(true);
     Picasso.with(context).load(imageUrl.get(position).getFullImageUrl())
-        .resize(350, 350)
+        .placeholder(R.drawable.placeholder)
+        .resize(550, 600)
         .centerCrop()
         .into(imageView);
 

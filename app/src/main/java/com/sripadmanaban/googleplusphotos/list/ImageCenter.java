@@ -16,9 +16,13 @@ import java.util.List;
  */
 public class ImageCenter {
 
+    private static ImageCenter imageCenter;
+
     private List<ImagePlusOneURL> imagePlusOneURLs;
     private HashMap<String, Integer> checkUrlMap;
-    private static ImageCenter imageCenter;
+
+    private String token;
+
     private Context context;
 
     public static ImageCenter getImageCenter(Context context) {
@@ -42,6 +46,14 @@ public class ImageCenter {
         this.checkUrlMap = checkUrlMap;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public List<ImagePlusOneURL> getImagePlusOneURLs() {
         return imagePlusOneURLs;
     }
@@ -53,6 +65,9 @@ public class ImageCenter {
     public void updateImagePlusOneURLs(String type, List<ImagePlusOneURL> list) {
         if(type.equals(Constants.SWIPE_DOWN_REFRESH)) {
             imagePlusOneURLs.addAll(0, list);
+        }
+        if(type.equals(Constants.SCROLL_REFRESH)) {
+            imagePlusOneURLs.addAll(list);
         }
     }
 }

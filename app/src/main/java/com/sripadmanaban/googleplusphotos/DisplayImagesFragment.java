@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
@@ -46,6 +47,8 @@ public class DisplayImagesFragment extends Fragment {
     DisplayImagesFragmentCallBack mCallBack;
 
     private ImageCenter imageCenter;
+
+    private ImageAdapter imageAdapter;
 
     public static DisplayImagesFragment newInstance(Context context) {
         DisplayImagesFragment displayImagesFragment = new DisplayImagesFragment();
@@ -91,6 +94,9 @@ public class DisplayImagesFragment extends Fragment {
                 sendToCallingActivity(position);
             }
         });
+        imageAdapter = new ImageAdapter(getActivity(), imageCenter.getImagePlusOneURLs());
+        Log.d("count", imageAdapter.getCount() + "");
+        gridView.setAdapter(imageAdapter);
 
         return view;
     }
@@ -101,8 +107,7 @@ public class DisplayImagesFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                AsyncSearchActivities searchActivities = new AsyncSearchActivities();
-                searchActivities.execute(authorization, Constants.SWIPE_DOWN_REFRESH);
+                getData(Constants.SWIPE_DOWN_REFRESH, null);
                 swipeRefreshLayout.setRefreshing(true);
             }
         });
@@ -114,10 +119,13 @@ public class DisplayImagesFragment extends Fragment {
         /**
          * Execute the background task, which uses {@link android.os.AsyncTask} to load the data.
          */
-        AsyncSearchActivities searchActivities = new AsyncSearchActivities();
-        searchActivities.execute(authorization, Constants.ON_RESUME);
+        getData(Constants.ON_RESUME, null);
     }
 
+    private void getData(String type, String pageToken) {
+        AsyncSearchActivities searchActivities = new AsyncSearchActivities();
+        searchActivities.execute(authorization, type, pageToken);
+    }
 
 
     private class AsyncSearchActivities extends AsyncTask<String, Void, List<ImagePlusOneURL>> {
@@ -136,6 +144,10 @@ public class DisplayImagesFragment extends Fragment {
 
             try {
 
+                if(params[2] != null) {
+                    searchUrl = "https://www.googleapis.com/plus/v1/activities?query=photographs&maxResults=20&pageToken=" + params[2] + "&key=AIzaSyBmE7DEY4PeKC_KaG7SqwPZdM9BexGiK_o";
+                }
+
                 OkHttpClient client = new OkHttpClient();
 
                 Request request = new Request.Builder()
@@ -151,6 +163,7 @@ public class DisplayImagesFragment extends Fragment {
                 Gson gson = new GsonBuilder().create();
 
                 ListJson listJson = gson.fromJson(input, ListJson.class);
+                imageCenter.setToken(listJson.getNextPageToken());
                 List<ItemsList> items = listJson.getItems();
                 List<AttachmentsList> attachments = new ArrayList<>();
                 for(ItemsList item : items) {
@@ -174,6 +187,9 @@ public class DisplayImagesFragment extends Fragment {
                                         imageCenter.getImagePlusOneURLs().add(object);
                                         break;
                                     case Constants.SWIPE_DOWN_REFRESH :
+                                        mImagePlusOneURLs.add(object);
+                                        break;
+                                    case Constants.SCROLL_REFRESH :
                                         mImagePlusOneURLs.add(object);
                                         break;
                                 }
@@ -202,10 +218,25 @@ public class DisplayImagesFragment extends Fragment {
 
         // Remove all items from the HashMap, and then replace them with the new items
         Log.d("count map", list.size() + "");
+        imageAdapter.notifyDataSetChanged();
 
-        ImageAdapter imageAdapter = new ImageAdapter(getActivity(), list);
-        Log.d("count", imageAdapter.getCount() + "");
-        gridView.setAdapter(imageAdapter);
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                Log.d("ScrollState", scrollState + "");
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                Log.d("FirstItem", firstVisibleItem + "");
+                Log.d("VisibleCount", visibleItemCount + "");
+                Log.d("TotalItem", totalItemCount + "");
+
+                if(totalItemCount - firstVisibleItem < 7) {
+                    getData(Constants.SCROLL_REFRESH, imageCenter.getToken());
+                }
+            }
+        });
 
         // Stop the refreshing indicator
         swipeRefreshLayout.setRefreshing(false);

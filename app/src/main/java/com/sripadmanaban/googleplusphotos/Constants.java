@@ -23,5 +23,6 @@ public interface Constants {
     public static final String IMAGE_POSITION = "Position";
     public static final String ON_RESUME = "Resume";
     public static final String SWIPE_DOWN_REFRESH = "Swipe_Down_Refresh";
+    public static final String SCROLL_REFRESH = "Scroll_Refresh";
 
 }
