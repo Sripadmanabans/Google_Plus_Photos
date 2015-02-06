@@ -31,8 +31,12 @@ public class PlusOneImageFragment extends Fragment {
     private ImageView imageView;
     private int position;
 
-    public static PlusOneImageFragment newInstance() {
-        return new PlusOneImageFragment();
+    public static Fragment newInstance(int position) {
+        Fragment fragment = new PlusOneImageFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.IMAGE_POSITION, position);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Nullable
@@ -40,10 +44,12 @@ public class PlusOneImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_plus_one_image, container, false);
 
-        imageCenter = ImageCenter.getImageCenter(getActivity().getApplicationContext());
-        position = imageCenter.getPosition();
+        Bundle bundle = getArguments();
 
-        final GestureDetectorCompat mDetector = new GestureDetectorCompat(getActivity(), new GestureDetector.SimpleOnGestureListener() {
+        imageCenter = ImageCenter.getImageCenter(getActivity().getApplicationContext());
+        position = bundle.getInt(Constants.IMAGE_POSITION);
+
+        /*final GestureDetectorCompat mDetector = new GestureDetectorCompat(getActivity(), new GestureDetector.SimpleOnGestureListener() {
             private static final String TAG = "Gesture";
 
             @Override
@@ -95,7 +101,7 @@ public class PlusOneImageFragment extends Fragment {
                 return mDetector.onTouchEvent(event);
             }
 
-        });
+        });*/
 
         mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
         imageView = (ImageView) view.findViewById(R.id.imageView);
@@ -115,7 +121,8 @@ public class PlusOneImageFragment extends Fragment {
         plusOneUrl = imageCenter.getImageUrl().get(imageUrl);
         Picasso.with(getActivity())
                 .load(imageUrl)
-                .fit()
+                .resize(500, 500)
+                .centerCrop()
                 .into(imageView);
         mPlusOneButton.initialize(plusOneUrl, Constants.PLUS_ONE_REQUEST_CODE);
     }

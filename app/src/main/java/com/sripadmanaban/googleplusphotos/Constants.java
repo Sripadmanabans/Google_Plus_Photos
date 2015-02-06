@@ -20,5 +20,6 @@ public interface Constants {
     public static final String TAG = "android-plus";
     public static final String PREFERENCES = "My_Preferences";
     public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+    public static final String IMAGE_POSITION = "Position";
 
 }

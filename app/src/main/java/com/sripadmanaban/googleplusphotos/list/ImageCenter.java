@@ -47,4 +47,8 @@ public class ImageCenter {
     public void setPosition(int position) {
         this.position = position;
     }
+
+    public int getCount() {
+        return imageUrl.size();
+    }
 }
