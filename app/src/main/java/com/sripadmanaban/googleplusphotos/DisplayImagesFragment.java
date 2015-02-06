@@ -77,6 +77,8 @@ public class DisplayImagesFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_display_images, container, false);
 
+        setRetainInstance(true);
+
         imageCenter = ImageCenter.getImageCenter(getActivity().getApplicationContext());
 
         Bundle bundle = getArguments();

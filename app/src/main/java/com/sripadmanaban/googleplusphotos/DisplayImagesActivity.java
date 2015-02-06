@@ -16,9 +16,11 @@ public class DisplayImagesActivity extends Activity implements DisplayImagesFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_images);
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, DisplayImagesFragment.newInstance(this), DisplayImagesFragment.class.getName());
-        transaction.commit();
+        if(savedInstanceState == null) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, DisplayImagesFragment.newInstance(this), DisplayImagesFragment.class.getName());
+            transaction.commit();
+        }
     }
 
     @Override

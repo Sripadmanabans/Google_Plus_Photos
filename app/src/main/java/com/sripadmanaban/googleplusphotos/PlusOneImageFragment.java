@@ -38,12 +38,13 @@ public class PlusOneImageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_plus_one_image, container, false);
 
         Bundle bundle = getArguments();
-
         imageCenter = ImageCenter.getImageCenter(getActivity().getApplicationContext());
         position = bundle.getInt(Constants.IMAGE_POSITION);
 
         mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
         imageView = (ImageView) view.findViewById(R.id.imageView);
+
+        setRetainInstance(true);
 
         return view;
     }
