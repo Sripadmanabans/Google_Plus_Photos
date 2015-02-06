@@ -31,6 +31,7 @@ public class ViewPagerFragment extends Fragment {
         imageCenter = ImageCenter.getImageCenter(getActivity().getApplicationContext());
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         viewPager.setAdapter(new ScreenSlideAdapter(getFragmentManager()));
+        viewPager.setPageTransformer(true , new ZoomOutPageTransformer());
 
         return view;
     }
