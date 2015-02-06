@@ -21,5 +21,7 @@ public interface Constants {
     public static final String PREFERENCES = "My_Preferences";
     public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
     public static final String IMAGE_POSITION = "Position";
+    public static final String ON_RESUME = "Resume";
+    public static final String SWIPE_DOWN_REFRESH = "Swipe_Down_Refresh";
 
 }

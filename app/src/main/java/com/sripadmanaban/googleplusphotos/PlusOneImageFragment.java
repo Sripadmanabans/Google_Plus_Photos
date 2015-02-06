@@ -12,9 +12,6 @@ import com.google.android.gms.plus.PlusOneButton;
 import com.squareup.picasso.Picasso;
 import com.sripadmanaban.googleplusphotos.list.ImageCenter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * The plus one fragments class
  * Created by Sripadmanaban on 2/2/2015.
@@ -58,9 +55,8 @@ public class PlusOneImageFragment extends Fragment {
     }
 
     private void loadImage(int position) {
-        List<String> keys = new ArrayList<>( imageCenter.getImageUrl().keySet());
-        String imageUrl = keys.get(position);
-        plusOneUrl = imageCenter.getImageUrl().get(imageUrl);
+        String imageUrl = imageCenter.getImagePlusOneURLs().get(position).getFullImageUrl();
+        plusOneUrl = imageCenter.getImagePlusOneURLs().get(position).getPlusOneUrl();
         Picasso.with(getActivity())
                 .load(imageUrl)
                 .resize(500, 500)

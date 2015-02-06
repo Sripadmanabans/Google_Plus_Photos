@@ -52,7 +52,7 @@ public class ViewPagerFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return imageCenter.getCount();
+            return imageCenter.getImagePlusOneURLs().size();
         }
 
         @Override

@@ -1,16 +1,14 @@
 package com.sripadmanaban.googleplusphotos;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.sripadmanaban.googleplusphotos.list.ImagePlusOneURL;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,12 +18,11 @@ import java.util.List;
 public class ImageAdapter extends BaseAdapter {
 
     private Context context;
-    List<String> imageUrl;
+    List<ImagePlusOneURL> imageUrl;
 
-    public ImageAdapter(Context context, HashMap<String, String> map) {
-        Log.d("map", map.toString());
+    public ImageAdapter(Context context, List<ImagePlusOneURL> list) {
         this.context = context;
-        imageUrl = new ArrayList<>(map.keySet());
+        imageUrl = list;
     }
 
     @Override
@@ -35,7 +32,7 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return imageUrl.get(position);
+        return imageUrl.get(position).getFullImageUrl();
     }
 
     @Override
@@ -53,8 +50,8 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-     Picasso.with(context).setIndicatorsEnabled(true);
-  Picasso.with(context).load(imageUrl.get(position))
+    Picasso.with(context).setIndicatorsEnabled(true);
+    Picasso.with(context).load(imageUrl.get(position).getFullImageUrl())
         .resize(350, 350)
         .centerCrop()
         .into(imageView);

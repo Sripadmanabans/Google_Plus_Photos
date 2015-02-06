@@ -2,7 +2,12 @@ package com.sripadmanaban.googleplusphotos.list;
 
 import android.content.Context;
 
+import com.sripadmanaban.googleplusphotos.Constants;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 
 /**
@@ -11,7 +16,8 @@ import java.util.LinkedHashMap;
  */
 public class ImageCenter {
 
-    private LinkedHashMap<String, String> imageUrl;
+    private List<ImagePlusOneURL> imagePlusOneURLs;
+    private HashMap<String, Integer> checkUrlMap;
     private static ImageCenter imageCenter;
     private Context context;
 
@@ -23,24 +29,30 @@ public class ImageCenter {
     }
 
     private ImageCenter(Context context) {
-        imageUrl = new LinkedHashMap<>();
+        imagePlusOneURLs = new ArrayList<>();
+        checkUrlMap = new HashMap<>();
         this.context = context;
     }
 
-    public LinkedHashMap<String, String> getImageUrl() {
-        return imageUrl;
+    public HashMap<String, Integer> getCheckUrlMap() {
+        return checkUrlMap;
     }
 
-    public void setImageUrl(LinkedHashMap<String, String> imageUrl) {
-
-        for(String urlKeys: imageUrl.keySet()){
-           if(!this.imageUrl.containsKey(urlKeys)){
-               this.imageUrl.put(urlKeys, imageUrl.get(urlKeys));
-           }
-       }
+    public void setCheckUrlMap(HashMap<String, Integer> checkUrlMap) {
+        this.checkUrlMap = checkUrlMap;
     }
 
-    public int getCount() {
-        return imageUrl.size();
+    public List<ImagePlusOneURL> getImagePlusOneURLs() {
+        return imagePlusOneURLs;
+    }
+
+    public void setImagePlusOneURLs(List<ImagePlusOneURL> imagePlusOneURLs) {
+        this.imagePlusOneURLs = imagePlusOneURLs;
+    }
+
+    public void updateImagePlusOneURLs(String type, List<ImagePlusOneURL> list) {
+        if(type.equals(Constants.SWIPE_DOWN_REFRESH)) {
+            imagePlusOneURLs.addAll(0, list);
+        }
     }
 }

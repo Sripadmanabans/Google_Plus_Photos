@@ -23,12 +23,12 @@ import com.squareup.okhttp.Response;
 import com.sripadmanaban.googleplusphotos.list.AttachmentsList;
 import com.sripadmanaban.googleplusphotos.list.FullImageList;
 import com.sripadmanaban.googleplusphotos.list.ImageCenter;
+import com.sripadmanaban.googleplusphotos.list.ImagePlusOneURL;
 import com.sripadmanaban.googleplusphotos.list.ItemsList;
 import com.sripadmanaban.googleplusphotos.list.ListJson;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -102,7 +102,7 @@ public class DisplayImagesFragment extends Fragment {
             @Override
             public void onRefresh() {
                 AsyncSearchActivities searchActivities = new AsyncSearchActivities();
-                searchActivities.execute(authorization);
+                searchActivities.execute(authorization, Constants.SWIPE_DOWN_REFRESH);
                 swipeRefreshLayout.setRefreshing(true);
             }
         });
@@ -111,24 +111,20 @@ public class DisplayImagesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        initiateRefresh();
-    }
-
-    private void initiateRefresh() {
         /**
          * Execute the background task, which uses {@link android.os.AsyncTask} to load the data.
          */
         AsyncSearchActivities searchActivities = new AsyncSearchActivities();
-        searchActivities.execute(authorization);
+        searchActivities.execute(authorization, Constants.ON_RESUME);
     }
 
 
 
-    private class AsyncSearchActivities extends AsyncTask<String, Void, LinkedHashMap<String, String>> {
+    private class AsyncSearchActivities extends AsyncTask<String, Void, List<ImagePlusOneURL>> {
 
         private String searchUrl = "https://www.googleapis.com/plus/v1/activities?query=photographs&maxResults=20&key=AIzaSyBmE7DEY4PeKC_KaG7SqwPZdM9BexGiK_o";
 
-        private LinkedHashMap<String, String> imageUrl = new LinkedHashMap<>();
+        private List<ImagePlusOneURL> mImagePlusOneURLs = new ArrayList<>();
 
         @Override
         protected void onPreExecute() {
@@ -136,7 +132,7 @@ public class DisplayImagesFragment extends Fragment {
         }
 
         @Override
-        protected LinkedHashMap<String, String> doInBackground(String... params) {
+        protected List<ImagePlusOneURL> doInBackground(String... params) {
 
             try {
 
@@ -165,11 +161,22 @@ public class DisplayImagesFragment extends Fragment {
 
                 for(AttachmentsList attachment : attachments) {
                     FullImageList fullImage = attachment.getFullImage();
-                    String url = attachment.getUrl();
+                    String plusOneUrl = attachment.getUrl();
                     if(fullImage != null) {
                         if (fullImage.getUrl() != null) {
-                            if(!imageUrl.containsKey(fullImage.getUrl())) {
-                                imageUrl.put(fullImage.getUrl(), url);
+                            if(!imageCenter.getCheckUrlMap().containsKey(fullImage.getUrl())) {
+                                imageCenter.getCheckUrlMap().put(fullImage.getUrl(), 0);
+                                ImagePlusOneURL object = new ImagePlusOneURL();
+                                object.setFullImageUrl(fullImage.getUrl());
+                                object.setPlusOneUrl(plusOneUrl);
+                                switch (params[1]) {
+                                    case Constants.ON_RESUME:
+                                        imageCenter.getImagePlusOneURLs().add(object);
+                                        break;
+                                    case Constants.SWIPE_DOWN_REFRESH :
+                                        mImagePlusOneURLs.add(object);
+                                        break;
+                                }
                             }
                         }
                     }
@@ -178,23 +185,25 @@ public class DisplayImagesFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return imageUrl;
+            finally {
+                imageCenter.updateImagePlusOneURLs(params[1], mImagePlusOneURLs);
+            }
+            return imageCenter.getImagePlusOneURLs();
         }
 
         @Override
-        protected void onPostExecute(LinkedHashMap<String, String> map) {
-            onRefreshComplete(map);
+        protected void onPostExecute(List<ImagePlusOneURL> list) {
+            onRefreshComplete(list);
         }
     }
 
 
-    private void onRefreshComplete(LinkedHashMap<String,String> map) {
+    private void onRefreshComplete(List<ImagePlusOneURL> list) {
 
         // Remove all items from the HashMap, and then replace them with the new items
-        Log.d("count map", map.size() + "");
-        imageCenter.setImageUrl(map);
+        Log.d("count map", list.size() + "");
 
-        ImageAdapter imageAdapter = new ImageAdapter(getActivity(), imageCenter.getImageUrl());
+        ImageAdapter imageAdapter = new ImageAdapter(getActivity(), list);
         Log.d("count", imageAdapter.getCount() + "");
         gridView.setAdapter(imageAdapter);
 
