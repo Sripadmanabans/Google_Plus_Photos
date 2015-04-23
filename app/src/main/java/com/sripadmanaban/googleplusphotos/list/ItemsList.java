@@ -3,6 +3,7 @@ package com.sripadmanaban.googleplusphotos.list;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * The items object in the json
  * Created by Sripadmanaban on 1/29/2015.
  */
 public class ItemsList {

@@ -2,28 +2,32 @@ package com.sripadmanaban.googleplusphotos;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 
 /**
  * Display Activity
  * Created by Sripadmanaban on 1/28/2015.
  */
-public class DisplayImagesActivity extends Activity {
+public class DisplayImagesActivity extends Activity implements DisplayImagesFragment.DisplayImagesFragmentCallBack {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_images);
 
-        Intent intent = getIntent();
-        Bundle bundle = new Bundle();
-        bundle.putString("ACCESS_TOKEN", intent.getStringExtra("ACCESS_TOKEN"));
+        if(savedInstanceState == null) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, DisplayImagesFragment.newInstance(this), DisplayImagesFragment.class.getName());
+            transaction.commit();
+        }
+    }
 
-        DisplayImagesFragment fragment = new DisplayImagesFragment();
-        fragment.setArguments(bundle);
+    @Override
+    public void dataForFullImageFragment(int position) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.fragment_container, fragment, DisplayImagesFragment.class.getName());
+        transaction.replace(R.id.fragment_container, ViewPagerFragment.getInstance(position), ViewPagerFragment.class.getName());
+        transaction.addToBackStack(PlusOneImageFragment.class.getName());
         transaction.commit();
     }
 }
